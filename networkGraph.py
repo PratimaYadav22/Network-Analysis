@@ -9,6 +9,17 @@ def calculate_network_metrics(G):
     subgraph = G.subgraph(largest_cc)
     avg_path_length = nx.average_shortest_path_length(subgraph)
     avg_clustering = nx.average_clustering(G)
+
+    #degree_distribution = nx.degree_centrality(G)
+    degrees = [G.degree(n) for n in G.nodes()]  # Get degrees for all nodes
+    fig, ax = plt.subplots(figsize=(7, 7))  # Adjusted for a single histogram
+    ax.hist(degrees, bins=range(max(degrees)+1), color='blue', alpha=0.7, rwidth=0.85)
+    ax.set_title('Degree Distribution')
+    ax.set_xlabel('Degree')
+    ax.set_ylabel('Frequency')
+    plt.tight_layout()
+    plt.show()
+    
     return avg_path_length, avg_clustering
 
 # Function to apply the Girvan-Newman method for community detection
@@ -46,6 +57,22 @@ def analyze_clusters(G, clusters, node_labels):
         # Service and Maintenance: High internal usage
         if density > 0.1:  # Example threshold
             insights["Service and Maintenance"].append(cluster)
+            # Calculate betweenness centrality for each node
+            node_betweenness_centrality = nx.betweenness_centrality(subgraph)
+            # Calculate the average betweenness centrality
+            average_betweenness_centrality = sum(node_betweenness_centrality.values()) / len(node_betweenness_centrality)
+            print(f"\nnode_betweenness_centrality: {node_betweenness_centrality}")
+            print(f"average_betweenness_centrality: {average_betweenness_centrality}")
+
+            # Find the node with the highest betweenness centrality
+            max_node = max(node_betweenness_centrality, key=node_betweenness_centrality.get)
+            max_value = node_betweenness_centrality[max_node]
+
+            max_node_name = node_labels.get(max_node, "Unknown")
+
+            # Print the node with the highest betweenness centrality
+            print(f"Node with the highest betweenness centrality: {max_node} (Name: {max_node_name}), Value: {max_value}")
+
 
         # Targeted Marketing: Low usage areas
         if density < 0.05 :  # Example thresholds
@@ -104,9 +131,9 @@ divvy_data = pd.read_csv(file_path)
 all_node_labels = create_node_labels(divvy_data, 800)
 
 # Parameters for the simulation
-num_iterations = 4
-start_nodes = 100
-node_increment = 100
+num_iterations = 5
+start_nodes = 5
+node_increment = 2
 nearest_neighbors = 3
 rewiring_prob = 0.5
 
