@@ -14,7 +14,7 @@ divvy_data.head(), divvy_data.columns
 
 # Select the first 10 unique stations from both "FROM STATION NAME" and "TO STATION NAME"
 unique_stations = pd.unique(divvy_data[['FROM STATION NAME', 'TO STATION NAME']].values.ravel('K'))
-selected_stations = unique_stations[:100]
+selected_stations = unique_stations[:15000]
 
 # Generate a Watts-Strogatz small-world network for 10 nodes
 # k is the number of nearest neighbors, p is the probability of rewiring each edge
@@ -77,12 +77,12 @@ print("Average path length:", average_path_length)
 # Assuming ws_graph is your Watts-Strogatz graph
 node_clustering, average_clustering = calculate_clustering_coefficients(ws_graph)
 print("Average Clustering Coefficient:", average_clustering)
-print("Node Clustering Coefficients:", node_clustering)
+#print("Node Clustering Coefficients:", node_clustering)
 
 # Assuming ws_graph is your Watts-Strogatz graph
 node_betweenness, average_betweenness = calculate_betweenness_centrality(ws_graph)
 print("Average Betweenness Centrality:", average_betweenness)
-print("Node Betweenness Centrality:", node_betweenness)
+#print("Node Betweenness Centrality:", node_betweenness)
 
 plt.show()
 
@@ -102,4 +102,3 @@ average_path_length = nx.average_shortest_path_length(subgraph)
 clustering_coefficient = nx.clustering(ws_graph)
 average_clustering_coefficient = sum(clustering_coefficient.values()) / len(clustering_coefficient)
 '''
-
